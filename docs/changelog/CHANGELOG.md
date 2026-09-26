@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-26
+
+### Changed
+
+- Each Shopify tool advertises its own capability tags (`<tool name>` plus a family such as `catalog` or `orders`). The shared `ecommerce` / `shopify` stamp is no longer applied to every tool.
 
 ## 2026-08-16
 

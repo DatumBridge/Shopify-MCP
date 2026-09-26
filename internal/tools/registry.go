@@ -28,6 +28,13 @@ func baseProps(extra map[string]interface{}) map[string]interface{} {
 	return props
 }
 
+func withCapabilitiesLine(desc string, caps []string) string {
+	if len(caps) == 0 || strings.Contains(strings.ToLower(desc), "capabilities:") {
+		return desc
+	}
+	return strings.TrimSpace(desc) + "\nCapabilities: " + strings.Join(caps, ", ")
+}
+
 func schema(props map[string]interface{}, required []string) map[string]interface{} {
 	s := map[string]interface{}{
 		"type":       "object",
@@ -178,11 +185,14 @@ func Register() ([]mcp.ToolDesc, map[string]mcp.ToolHandler) {
 	var descs []mcp.ToolDesc
 
 	add := func(name, desc string, props map[string]interface{}, required []string, h mcp.ToolHandler) {
+		caps := capabilitiesForTool(name)
+		input := schema(props, required)
+		input["x-datumbridge-capabilities"] = caps
 		descs = append(descs, mcp.ToolDesc{
 			Name:        name,
-			Description: desc,
-			InputSchema: schema(props, required),
-			Meta:        mcp.CapabilityMeta(capabilitiesForTool(name)...),
+			Description: withCapabilitiesLine(desc, caps),
+			InputSchema: input,
+			Meta:        mcp.CapabilityMeta(caps...),
 		})
 		handlers[name] = h
 	}
