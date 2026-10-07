@@ -9,6 +9,7 @@ import (
 
 	"github.com/datumbridge/shopify-mcp/internal/mcp"
 	"github.com/datumbridge/shopify-mcp/internal/shopify"
+	"github.com/datumbridge/shopify-mcp/registry_docs"
 )
 
 func baseProps(extra map[string]interface{}) map[string]interface{} {
@@ -188,6 +189,9 @@ func Register() ([]mcp.ToolDesc, map[string]mcp.ToolHandler) {
 		caps := capabilitiesForTool(name)
 		input := schema(props, required)
 		input["x-datumbridge-capabilities"] = caps
+		if doc := registrydocs.Markdown(name); doc != "" {
+			input["x-datumbridge-docs"] = doc
+		}
 		descs = append(descs, mcp.ToolDesc{
 			Name:        name,
 			Description: withCapabilitiesLine(desc, caps),
@@ -219,11 +223,11 @@ func Register() ([]mcp.ToolDesc, map[string]mcp.ToolHandler) {
 		}), []string{"id"}, handleGetProduct)
 	add("shopify_create_product", "Create a product (confirm or dry_run required)",
 		baseProps(merge(writeExtra, map[string]interface{}{
-			"title":       map[string]interface{}{"type": "string"},
-			"description": map[string]interface{}{"type": "string"},
-			"vendor":      map[string]interface{}{"type": "string"},
+			"title":        map[string]interface{}{"type": "string"},
+			"description":  map[string]interface{}{"type": "string"},
+			"vendor":       map[string]interface{}{"type": "string"},
 			"product_type": map[string]interface{}{"type": "string"},
-			"status":      map[string]interface{}{"type": "string", "description": "ACTIVE, DRAFT, or ARCHIVED"},
+			"status":       map[string]interface{}{"type": "string", "description": "ACTIVE, DRAFT, or ARCHIVED"},
 		})), []string{"title"}, handleCreateProduct)
 	add("shopify_update_product", "Update a product (confirm or dry_run required)",
 		baseProps(merge(writeExtra, map[string]interface{}{
@@ -265,11 +269,11 @@ func Register() ([]mcp.ToolDesc, map[string]mcp.ToolHandler) {
 		})), []string{"id"}, handleUpdateOrder)
 	add("shopify_create_fulfillment", "Create a fulfillment for an order (confirm or dry_run)",
 		baseProps(merge(writeExtra, map[string]interface{}{
-			"order_id":            map[string]interface{}{"type": "string"},
-			"line_item_ids":       map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}},
-			"tracking_number":     map[string]interface{}{"type": "string"},
-			"tracking_company":    map[string]interface{}{"type": "string"},
-			"notify_customer":     map[string]interface{}{"type": "boolean"},
+			"order_id":         map[string]interface{}{"type": "string"},
+			"line_item_ids":    map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}},
+			"tracking_number":  map[string]interface{}{"type": "string"},
+			"tracking_company": map[string]interface{}{"type": "string"},
+			"notify_customer":  map[string]interface{}{"type": "boolean"},
 		})), []string{"order_id"}, handleCreateFulfillment)
 
 	// --- Customers ---
@@ -330,17 +334,17 @@ func Register() ([]mcp.ToolDesc, map[string]mcp.ToolHandler) {
 		}), []string{"id"}, handleGetDiscount)
 	add("shopify_create_discount", "Create a basic amount-off code discount (confirm or dry_run)",
 		baseProps(merge(writeExtra, map[string]interface{}{
-			"title":             map[string]interface{}{"type": "string"},
-			"code":              map[string]interface{}{"type": "string"},
-			"amount":            map[string]interface{}{"type": "string", "description": "Fixed amount off (decimal string)"},
-			"percentage":        map[string]interface{}{"type": "number", "description": "Percent off (0-100); preferred over amount when set"},
-			"starts_at":         map[string]interface{}{"type": "string", "description": "ISO8601 start time"},
-			"usage_limit":       map[string]interface{}{"type": "integer"},
+			"title":       map[string]interface{}{"type": "string"},
+			"code":        map[string]interface{}{"type": "string"},
+			"amount":      map[string]interface{}{"type": "string", "description": "Fixed amount off (decimal string)"},
+			"percentage":  map[string]interface{}{"type": "number", "description": "Percent off (0-100); preferred over amount when set"},
+			"starts_at":   map[string]interface{}{"type": "string", "description": "ISO8601 start time"},
+			"usage_limit": map[string]interface{}{"type": "integer"},
 		})), []string{"title", "code"}, handleCreateDiscount)
 	add("shopify_update_discount", "Update discount code node title/status (confirm or dry_run)",
 		baseProps(merge(writeExtra, map[string]interface{}{
-			"id":     map[string]interface{}{"type": "string"},
-			"title":  map[string]interface{}{"type": "string"},
+			"id":    map[string]interface{}{"type": "string"},
+			"title": map[string]interface{}{"type": "string"},
 		})), []string{"id"}, handleUpdateDiscount)
 	add("shopify_delete_discount", "Delete a code discount (confirm or dry_run)",
 		baseProps(merge(writeExtra, map[string]interface{}{
