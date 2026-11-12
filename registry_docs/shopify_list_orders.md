@@ -4,6 +4,14 @@ List orders (default last 60 days without read_all_orders)
 
 The gateway injects `credentials_json` from the connected account. Do not invent a token or paste a secret into the arguments.
 
+## Audience
+
+Privileged store tool (ADR-0179). Requires a valid customer-session PAT on published DE turns (`allowedToolIds`). Mutate / PII / inventory write stays off `publicToolIds`.
+
+| Who | Token |
+|---|---|
+| external | required |
+
 ## Parameters
 
 | Name | Required | Meaning |

@@ -4,6 +4,14 @@ Get a discount code node by id
 
 The gateway injects `credentials_json` from the connected account. Do not invent a token or paste a secret into the arguments.
 
+## Audience
+
+Curated store inquiry (ADR-0179). Anonymous / public DE turns may call this tool; Magento/Shopify/TikTok Shop still inject the workspace `wscred` login (ADR-0176).
+
+| Who | Token |
+|---|---|
+| anonymous | none |
+
 ## Parameters
 
 | Name | Required | Meaning |

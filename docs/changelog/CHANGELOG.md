@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-10
+
+### Changed
+
+- **ADR-0179 Audience matrix.** Catalog inquiry tools (`list`/`get` products, collections, shop, discounts) declare `anonymous` / `none` for public Digital Employee turns. Orders, customers, inventory write, product mutate, fulfillment, and discount mutate declare `external` / `required` for PAT-gated `allowedToolIds`. Re-run Setup/Sync after deploy.
+
 ## 2026-09-26
 
 ### Changed
